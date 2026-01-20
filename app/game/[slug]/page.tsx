@@ -341,19 +341,17 @@ export default async function GamePage({ params }: PageProps) {
                   )}
 
                   {/* Data de Lançamento */}
-                  {game.releaseDate && (
-                    <div className="flex items-start gap-3">
-                      <Calendar className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-xs text-slate-500 font-[var(--font-inter)] uppercase tracking-wider mb-1">
-                          Lançamento
-                        </p>
-                        <p className="text-slate-300 font-medium font-[var(--font-inter)]">
-                          {formatDate(game.releaseDate)}
-                        </p>
-                      </div>
+                  <div className="flex items-start gap-3">
+                    <Calendar className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-slate-500 font-[var(--font-inter)] uppercase tracking-wider mb-1">
+                        Lançamento
+                      </p>
+                      <p className="text-slate-300 font-medium font-[var(--font-inter)]">
+                        {game.releaseDate ? formatDate(game.releaseDate) : 'TBA'}
+                      </p>
                     </div>
-                  )}
+                  </div>
 
                   {/* Plataformas */}
                   <div className="flex items-start gap-3">

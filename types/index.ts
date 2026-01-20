@@ -5,7 +5,7 @@ export interface Game {
   shortDescription: string;
   coverImage: string;
   screenshots: string[];
-  releaseDate: string;
+  releaseDate?: string;
   links: {
     steam?: string;
     itch?: string;

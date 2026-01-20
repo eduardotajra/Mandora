@@ -126,6 +126,7 @@ export default defineType({
           { title: 'Sports', value: 'Sports' },
           { title: 'Racing', value: 'Racing' },
           { title: 'Fighting', value: 'Fighting' },
+          { title: 'Party Game', value: 'Party Game' },
           { title: 'Other', value: 'Other' },
         ],
       },
@@ -183,8 +184,7 @@ export default defineType({
       name: 'releaseDate',
       title: 'Release Date',
       type: 'date',
-      description: 'Data de lançamento do jogo (usado para ordenação)',
-      validation: (Rule) => Rule.required(),
+      description: 'Data de lançamento do jogo (deixe em branco para "TBA" - To Be Announced)',
     }),
   ],
   preview: {

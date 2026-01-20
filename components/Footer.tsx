@@ -1,17 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { X, Linkedin, Mail, Youtube, Instagram, Gamepad2, Cloud } from "lucide-react";
+import { X, Linkedin, Mail, Youtube, Instagram, Gamepad2 } from "lucide-react";
+import { TbButterfly } from "react-icons/tb";
 import Container from "./ui/Container";
 
 const socialLinks = [
   { icon: X, href: "https://x.com/TeamStaircase", label: "X" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/111147104/", label: "LinkedIn" },
+  { icon: Instagram, href: "https://www.instagram.com/teamstaircaseofficial/", label: "Instagram" },
   { icon: Youtube, href: "#", label: "YouTube" },
   { icon: Mail, href: "mailto:teamstaircasegames@gmail.com", label: "Email" },
   { icon: Gamepad2, href: "https://team-staircase.itch.io/", label: "Itch.io" },
-  { icon: Cloud, href: "https://bsky.app/profile/team-staircase.bsky.social", label: "Bluesky" },
+  { icon: TbButterfly, href: "https://bsky.app/profile/team-staircase.bsky.social", label: "Bluesky" },
 ];
 
 export default function Footer() {

@@ -58,6 +58,7 @@ interface SanityMember {
 }
 
 // Query GROQ para buscar todos os jogos
+// Ordena por releaseDate desc, jogos sem data aparecem no final
 export const GAMES_QUERY = `*[_type == "game"] | order(releaseDate desc) {
   _id,
   title,
