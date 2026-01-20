@@ -30,13 +30,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'role',
-      title: 'Role',
-      type: 'string',
-      description: 'Cargo/função na equipe (ex: Lead Artist, Gameplay Programmer)',
-      validation: (Rule) => Rule.required().max(100),
-    }),
-    defineField({
       name: 'avatar',
       title: 'Avatar',
       type: 'image',
@@ -115,9 +108,9 @@ export default defineType({
     }),
     defineField({
       name: 'skills',
-      title: 'Skills',
+      title: 'Skills/Role',
       type: 'array',
-      description: 'Lista de habilidades do membro (ex: Pixel Art, Unity, C#)',
+      description: 'Funções e habilidades do membro (ex: Lead Artist, Pixel Art, Unity, C#). Pode adicionar múltiplos.',
       of: [
         {
           type: 'string',
@@ -134,14 +127,13 @@ export default defineType({
   preview: {
     select: {
       title: 'name',
-      subtitle: 'role',
       media: 'avatar',
       slug: 'slug',
     },
-    prepare({ title, subtitle, media, slug }) {
+    prepare({ title, media, slug }) {
       return {
         title,
-        subtitle: `${subtitle || 'No role'}${slug?.current ? ` • /team/${slug.current}` : ''}`,
+        subtitle: slug?.current ? `/team/${slug.current}` : '',
         media,
       }
     },
@@ -151,11 +143,6 @@ export default defineType({
       title: 'Name, A-Z',
       name: 'nameAsc',
       by: [{ field: 'name', direction: 'asc' }],
-    },
-    {
-      title: 'Role, A-Z',
-      name: 'roleAsc',
-      by: [{ field: 'role', direction: 'asc' }],
     },
   ],
 })

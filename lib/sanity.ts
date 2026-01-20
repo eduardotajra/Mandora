@@ -49,7 +49,6 @@ interface SanityMember {
   slug?: {
     current: string;
   };
-  role: string;
   avatar: any;
   bio?: any[];
   skills?: string[];
@@ -126,8 +125,8 @@ export const TEAM_QUERY = `*[_type == "member"] | order(name asc) {
   _id,
   name,
   slug,
-  role,
   avatar,
+  skills,
   linkedinUrl,
   githubUrl
 }`;
@@ -137,7 +136,6 @@ export const MEMBER_BY_SLUG_QUERY = `*[_type == "member" && slug.current == $slu
   _id,
   name,
   slug,
-  role,
   avatar,
   bio,
   skills,
@@ -159,17 +157,21 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
         member.githubUrl || 
         "";
 
+      // Pega o primeiro skill como role (para compatibilidade com código existente)
+      const role = member.skills && member.skills.length > 0 ? member.skills[0] : "";
+
       return {
         id: parseInt(member._id.replace(/[^0-9]/g, "")) || index + 1,
         name: member.name,
         slug: member.slug?.current || "",
-        role: member.role,
+        role: role,
         photo: member.avatar
           ? urlFor(member.avatar).width(400).height(400).url()
           : "/api/placeholder/400/400",
         socialLink: socialLink,
         linkedinUrl: member.linkedinUrl,
         githubUrl: member.githubUrl,
+        skills: member.skills || [],
       };
     });
   } catch (error) {

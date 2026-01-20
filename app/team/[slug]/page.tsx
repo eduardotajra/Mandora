@@ -114,12 +114,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? urlFor(member.avatar).width(1200).height(630).url()
     : "/og-image.jpg";
 
+  const roleDescription = member.skills && member.skills.length > 0 
+    ? member.skills[0] 
+    : "Membro do Team Staircase";
+
   return {
     title: `${member.name} | Team Staircase`,
-    description: `${member.role} - ${member.name} do Team Staircase`,
+    description: `${roleDescription} - ${member.name} do Team Staircase`,
     openGraph: {
       title: `${member.name} | Team Staircase`,
-      description: `${member.role} - ${member.name} do Team Staircase`,
+      description: `${roleDescription} - ${member.name} do Team Staircase`,
       images: [avatarUrl],
     },
   };
@@ -137,12 +141,8 @@ export default async function MemberPage({ params }: PageProps) {
     ? urlFor(member.avatar).width(400).height(400).url()
     : null;
 
-  // Criar array único de tags (role + skills, sem duplicatas)
-  const allTags = [
-    member.role,
-    ...(member.skills || [])
-  ].filter((tag): tag is string => Boolean(tag) && tag.trim() !== "");
-  
+  // Criar array único de tags (skills, sem duplicatas)
+  const allTags = (member.skills || []).filter((tag): tag is string => Boolean(tag) && tag.trim() !== "");
   const uniqueTags = Array.from(new Set(allTags.map(tag => tag.trim())));
 
   return (
@@ -244,7 +244,7 @@ export default async function MemberPage({ params }: PageProps) {
                 {uniqueTags.length > 0 && (
                   <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6">
                     <h3 className="text-2xl font-bold tracking-wider text-white mb-6 font-[var(--font-orbitron)]">
-                      Especialidades
+                      Funções
                     </h3>
                     <div className="flex flex-wrap gap-3">
                       {uniqueTags.map((tag, index) => (
@@ -276,38 +276,6 @@ export default async function MemberPage({ params }: PageProps) {
                   </div>
                 )}
 
-                {/* Card Connect */}
-                {(member.linkedinUrl || member.githubUrl) && (
-                  <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6">
-                    <h3 className="text-2xl font-bold tracking-wider text-white mb-6 font-[var(--font-orbitron)]">
-                      Conectar
-                    </h3>
-                    <div className="flex flex-col gap-4">
-                      {member.linkedinUrl && (
-                        <a
-                          href={member.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/70 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group"
-                        >
-                          <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                          <span className="font-[var(--font-inter)]">LinkedIn</span>
-                        </a>
-                      )}
-                      {member.githubUrl && (
-                        <a
-                          href={member.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/70 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group"
-                        >
-                          <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                          <span className="font-[var(--font-inter)]">GitHub</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             </aside>
           </div>

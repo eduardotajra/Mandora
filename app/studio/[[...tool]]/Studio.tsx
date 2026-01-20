@@ -4,12 +4,12 @@ import { useEffect } from 'react'
 import { NextStudio } from 'next-sanity/studio'
 import config from '../../../sanity.config'
 
-// Suprime avisos de props desconhecidas do React no console (compatibilidade next-sanity + React 19)
+// Suprime avisos conhecidos do Sanity Studio no console (compatibilidade next-sanity + React 19)
 // Deve ser executado antes do componente ser renderizado
 if (typeof window !== 'undefined') {
   const originalError = console.error
   console.error = (...args: any[]) => {
-    // Filtra múltiplos padrões de erro relacionados ao disableTransition
+    // Filtra múltiplos padrões de erro relacionados ao Sanity Studio
     const errorMessage = args[0]
     if (
       typeof errorMessage === 'string' &&
@@ -17,10 +17,11 @@ if (typeof window !== 'undefined') {
         errorMessage.includes('disableTransition') ||
         errorMessage.includes('disableT') ||
         errorMessage.includes('React does not recognize') ||
-        (errorMessage.includes('prop') && errorMessage.includes('DOM element'))
+        (errorMessage.includes('prop') && errorMessage.includes('DOM element')) ||
+        (errorMessage.includes('Each child in a list should have a unique "key" prop') && errorMessage.includes('StyledBox'))
       )
     ) {
-      // Suprime apenas o aviso específico do disableTransition do next-sanity
+      // Suprime avisos conhecidos do next-sanity
       return
     }
     originalError.apply(console, args)
