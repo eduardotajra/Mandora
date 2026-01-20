@@ -54,11 +54,8 @@ interface SanityMember {
   bio?: any[];
   skills?: string[];
   favoriteGame?: string;
-  socials?: {
-    linkedin?: string;
-    github?: string;
-    artstation?: string;
-  };
+  linkedinUrl?: string;
+  githubUrl?: string;
 }
 
 // Query GROQ para buscar todos os jogos
@@ -131,7 +128,8 @@ export const TEAM_QUERY = `*[_type == "member"] | order(name asc) {
   slug,
   role,
   avatar,
-  socials
+  linkedinUrl,
+  githubUrl
 }`;
 
 // Query GROQ para buscar um membro específico por slug
@@ -144,7 +142,8 @@ export const MEMBER_BY_SLUG_QUERY = `*[_type == "member" && slug.current == $slu
   bio,
   skills,
   favoriteGame,
-  socials
+  linkedinUrl,
+  githubUrl
 }`;
 
 // Função para buscar todos os membros da equipe
@@ -154,11 +153,10 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     const members: SanityMember[] = await client.fetch(TEAM_QUERY);
 
     return members.map((member, index) => {
-      // Determina o link social principal (prioridade: LinkedIn > GitHub > ArtStation)
+      // Determina o link social principal (prioridade: LinkedIn > GitHub)
       const socialLink = 
-        member.socials?.linkedin || 
-        member.socials?.github || 
-        member.socials?.artstation || 
+        member.linkedinUrl || 
+        member.githubUrl || 
         "";
 
       return {
@@ -170,7 +168,8 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
           ? urlFor(member.avatar).width(400).height(400).url()
           : "/api/placeholder/400/400",
         socialLink: socialLink,
-        socials: member.socials,
+        linkedinUrl: member.linkedinUrl,
+        githubUrl: member.githubUrl,
       };
     });
   } catch (error) {

@@ -55,30 +55,16 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'socials',
-      title: 'Social Links',
-      type: 'object',
-      description: 'Links para perfis sociais do membro',
-      fields: [
-        {
-          name: 'linkedin',
-          title: 'LinkedIn',
-          type: 'url',
-          description: 'URL do perfil no LinkedIn',
-        },
-        {
-          name: 'github',
-          title: 'GitHub',
-          type: 'url',
-          description: 'URL do perfil no GitHub',
-        },
-        {
-          name: 'artstation',
-          title: 'ArtStation',
-          type: 'url',
-          description: 'URL do perfil no ArtStation',
-        },
-      ],
+      name: 'linkedinUrl',
+      title: 'LinkedIn URL',
+      type: 'url',
+      description: 'Link do LinkedIn pessoal do membro',
+    }),
+    defineField({
+      name: 'githubUrl',
+      title: 'GitHub URL',
+      type: 'url',
+      description: 'Link do GitHub pessoal do membro',
     }),
     defineField({
       name: 'bio',

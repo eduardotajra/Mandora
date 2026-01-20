@@ -23,9 +23,6 @@ export interface TeamMember {
   bio?: any[];
   skills?: string[];
   favoriteGame?: string;
-  socials?: {
-    linkedin?: string;
-    github?: string;
-    artstation?: string;
-  };
+  linkedinUrl?: string;
+  githubUrl?: string;
 }

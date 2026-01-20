@@ -155,11 +155,7 @@ export default function AboutContent({ teamMembers }: AboutContentProps) {
                     console.warn(`Membro "${member.name}" não tem slug configurado. Configure no Sanity Studio.`);
                   }
                 }}
-                className={`flex flex-col items-center text-center gap-4 group transition-transform duration-300 ${
-                  member.slug && member.slug.trim() !== "" 
-                    ? "cursor-pointer hover:-translate-y-2" 
-                    : "cursor-not-allowed opacity-75"
-                }`}
+                className="flex flex-col items-center text-center gap-4 group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
               >
                 <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-purple-500/30 group-hover:border-cyan-500 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all duration-300">
                   {member.photo ? (
@@ -184,18 +180,6 @@ export default function AboutContent({ teamMembers }: AboutContentProps) {
                 <p className="text-sm text-purple-400 uppercase tracking-widest font-[var(--font-inter)]">
                   {member.role}
                 </p>
-                {member.slug && member.slug.trim() !== "" && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleMemberClick(member.slug);
-                    }}
-                    className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 transition-colors text-xs font-[var(--font-inter)]"
-                  >
-                    <ExternalLink className="w-3 h-3" />
-                    Ver Perfil
-                  </button>
-                )}
               </motion.div>
             ))}
           </div>

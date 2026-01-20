@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Linkedin, Github, Gamepad2 } from "lucide-react";
+import { ArrowLeft, Linkedin, Github, Gamepad2 } from "lucide-react";
 import { getMemberBySlug, getAllMemberSlugs, urlFor, client } from "@/lib/sanity";
 import { PortableText } from "@portabletext/react";
 import { PortableTextComponents } from "@portabletext/react";
@@ -137,6 +137,14 @@ export default async function MemberPage({ params }: PageProps) {
     ? urlFor(member.avatar).width(400).height(400).url()
     : null;
 
+  // Criar array único de tags (role + skills, sem duplicatas)
+  const allTags = [
+    member.role,
+    ...(member.skills || [])
+  ].filter((tag): tag is string => Boolean(tag) && tag.trim() !== "");
+  
+  const uniqueTags = Array.from(new Set(allTags.map(tag => tag.trim())));
+
   return (
     <div className="min-h-screen bg-slate-950 relative">
       {/* Botão Voltar */}
@@ -151,128 +159,152 @@ export default async function MemberPage({ params }: PageProps) {
       {/* Conteúdo Principal */}
       <section className="py-20">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Coluna Esquerda (2/3) - Bio */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Cabeçalho Centralizado */}
-              <div className="flex flex-col items-center text-center mb-12">
-                {/* Avatar Grande */}
-                <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-purple-500/50 mx-auto shadow-[0_0_30px_rgba(168,85,247,0.4)] mb-6">
-                  {avatarUrl ? (
-                    <Image
-                      src={avatarUrl}
-                      alt={member.name}
-                      fill
-                      sizes="192px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple-600 to-cyan-600 flex items-center justify-center">
-                      <span className="text-6xl text-white">
-                        {member.name.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Nome */}
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-wider text-white mb-3 font-[var(--font-orbitron)]">
-                  {member.name}
-                </h1>
-
-                {/* Cargo */}
-                <p className="text-lg md:text-xl text-purple-400 uppercase tracking-widest mb-6 font-[var(--font-inter)]">
-                  {member.role}
-                </p>
-
-                {/* Redes Sociais */}
-                {(member.socials?.linkedin || member.socials?.github || member.socials?.artstation) && (
-                  <div className="flex items-center gap-4 justify-center">
-                    {member.socials.linkedin && (
-                      <a
-                        href={member.socials.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900/50 backdrop-blur-md border border-white/10 text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
-                        aria-label="LinkedIn"
-                      >
-                        <Linkedin className="w-5 h-5" />
-                      </a>
-                    )}
-                    {member.socials.github && (
-                      <a
-                        href={member.socials.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900/50 backdrop-blur-md border border-white/10 text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
-                        aria-label="GitHub"
-                      >
-                        <Github className="w-5 h-5" />
-                      </a>
-                    )}
-                    {member.socials.artstation && (
-                      <a
-                        href={member.socials.artstation}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900/50 backdrop-blur-md border border-white/10 text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
-                        aria-label="ArtStation"
-                      >
-                        <ExternalLink className="w-5 h-5" />
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Bio */}
-              {member.bio && member.bio.length > 0 ? (
-                <div className="prose prose-invert max-w-none">
-                  <PortableText
-                    value={member.bio}
-                    components={portableTextComponents}
-                  />
-                </div>
+          {/* Hero Section - Avatar Gigante + Nome + Links Sociais */}
+          <div className="flex flex-col items-center text-center mb-16">
+            {/* Avatar Gigante - Protagonista */}
+            <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-purple-500/30 ring-4 ring-purple-500/10 mx-auto mb-8 shadow-[0_0_50px_rgba(168,85,247,0.5)]">
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  alt={member.name}
+                  fill
+                  sizes="(max-width: 768px) 256px, 320px"
+                  className="object-cover"
+                />
               ) : (
-                <div className="text-slate-400 font-[var(--font-inter)] text-center py-12">
-                  <p>Biografia em breve...</p>
+                <div className="w-full h-full bg-gradient-to-br from-purple-600 to-cyan-600 flex items-center justify-center">
+                  <span className="text-8xl md:text-9xl text-white">
+                    {member.name.charAt(0).toUpperCase()}
+                  </span>
                 </div>
               )}
             </div>
 
-            {/* Coluna Direita (1/3) - Sidebar */}
+            {/* Nome */}
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-wider text-white mb-4 font-[var(--font-orbitron)]">
+              {member.name}
+            </h1>
+
+            {/* Links Sociais Pessoais */}
+            {(member.linkedinUrl || member.githubUrl) && (
+              <div className="flex items-center gap-6 justify-center mt-6">
+                {member.linkedinUrl && (
+                  <a
+                    href={member.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-14 h-14 flex items-center justify-center rounded-full bg-slate-900/50 backdrop-blur-md border border-white/10 text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-110 transition-all duration-300"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="w-7 h-7" />
+                  </a>
+                )}
+                {member.githubUrl && (
+                  <a
+                    href={member.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-14 h-14 flex items-center justify-center rounded-full bg-slate-900/50 backdrop-blur-md border border-white/10 text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-110 transition-all duration-300"
+                    aria-label="GitHub"
+                  >
+                    <Github className="w-7 h-7" />
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Grid de Conteúdo */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Coluna Esquerda (2/3) - Bio */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Bio */}
+              {member.bio && member.bio.length > 0 ? (
+                <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-10">
+                  <div className="prose prose-invert max-w-none">
+                    <PortableText
+                      value={member.bio}
+                      components={portableTextComponents}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-10 text-center">
+                  <p className="text-slate-400 font-[var(--font-inter)] text-lg">
+                    Biografia em breve...
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Coluna Direita (1/3) - Sidebar Info */}
             <aside className="lg:col-span-1">
               <div className="sticky top-24 space-y-6">
-                {/* Card Skills */}
-                {member.skills && member.skills.length > 0 && (
-                  <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl p-6">
-                    <h3 className="text-2xl font-bold tracking-wider text-white mb-4 font-[var(--font-orbitron)]">
-                      Skills
+                {/* Card Specialties */}
+                {uniqueTags.length > 0 && (
+                  <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+                    <h3 className="text-2xl font-bold tracking-wider text-white mb-6 font-[var(--font-orbitron)]">
+                      Especialidades
                     </h3>
                     <div className="flex flex-wrap gap-3">
-                      {member.skills.map((skill, index) => (
+                      {uniqueTags.map((tag, index) => (
                         <span
                           key={index}
-                          className="bg-purple-900/40 rounded-full px-3 py-1 text-xs text-purple-300 font-medium font-[var(--font-inter)]"
+                          className="bg-slate-800/80 border border-white/10 text-cyan-400 text-sm px-4 py-1.5 rounded-full font-medium font-[var(--font-inter)]"
                         >
-                          {skill}
+                          {tag}
                         </span>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* Card Curiosidades */}
+                {/* Card Favorite Game */}
                 {member.favoriteGame && (
-                  <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl p-6">
-                    <h3 className="text-2xl font-bold tracking-wider text-white mb-4 font-[var(--font-orbitron)]">
-                      Curiosidades
+                  <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+                    <h3 className="text-2xl font-bold tracking-wider text-white mb-6 font-[var(--font-orbitron)]">
+                      Jogo Favorito
                     </h3>
-                    <div className="flex items-start gap-3">
-                      <Gamepad2 className="w-5 h-5 text-purple-400 mt-1 flex-shrink-0" />
-                      <p className="text-slate-300 font-[var(--font-inter)]">
-                        <span className="text-purple-400 font-semibold">Jogo favorito:</span> {member.favoriteGame}
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                        <Gamepad2 className="w-6 h-6 text-white" />
+                      </div>
+                      <p className="text-slate-300 font-[var(--font-inter)] text-lg">
+                        <span className="text-purple-400 font-semibold">{member.favoriteGame}</span>
                       </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Card Connect */}
+                {(member.linkedinUrl || member.githubUrl) && (
+                  <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+                    <h3 className="text-2xl font-bold tracking-wider text-white mb-6 font-[var(--font-orbitron)]">
+                      Conectar
+                    </h3>
+                    <div className="flex flex-col gap-4">
+                      {member.linkedinUrl && (
+                        <a
+                          href={member.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/70 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group"
+                        >
+                          <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                          <span className="font-[var(--font-inter)]">LinkedIn</span>
+                        </a>
+                      )}
+                      {member.githubUrl && (
+                        <a
+                          href={member.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg text-slate-300 hover:text-cyan-400 hover:border-purple-500/50 hover:bg-slate-800/70 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group"
+                        >
+                          <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                          <span className="font-[var(--font-inter)]">GitHub</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 )}

@@ -1,15 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Twitter, Linkedin, Mail, Youtube } from "lucide-react";
+import { Twitter, Linkedin, Mail, Youtube, Instagram, Gamepad2, Cloud } from "lucide-react";
 import Container from "./ui/Container";
 
 const socialLinks = [
-  { icon: Github, href: "#", label: "GitHub" },
-  { icon: Twitter, href: "#", label: "Twitter" },
+  { icon: Twitter, href: "#", label: "Twitter/X" },
   { icon: Linkedin, href: "#", label: "LinkedIn" },
+  { icon: Instagram, href: "#", label: "Instagram" },
   { icon: Youtube, href: "#", label: "YouTube" },
   { icon: Mail, href: "#contact", label: "Email" },
+  { icon: Gamepad2, href: "#", label: "Itch.io" },
+  { icon: Cloud, href: "#", label: "Bluesky" },
 ];
 
 export default function Footer() {
