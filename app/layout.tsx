@@ -29,17 +29,17 @@ export const metadata: Metadata = {
     default: "Team Staircase | Game Studio",
     template: "%s | Team Staircase",
   },
-  description: "Team Staircase criando mundos digitais no projeto Mandora. Explore nossos jogos e descubra experiências únicas e imersivas.",
-  keywords: ["jogos", "games", "desenvolvimento de jogos", "game studio", "Team Staircase", "Mandora"],
+  description: "Team Staircase criando mundos digitais imersivos e experiências únicas. Explore nossos jogos e descubra aventuras extraordinárias.",
+  keywords: ["jogos", "games", "desenvolvimento de jogos", "game studio", "Team Staircase"],
   authors: [{ name: "Team Staircase" }],
   creator: "Team Staircase",
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://mandora.teamstaircase.com",
+    url: "https://teamstaircase.com",
     siteName: "Team Staircase",
     title: "Team Staircase | Game Studio",
-    description: "Team Staircase criando mundos digitais no projeto Mandora. Explore nossos jogos e descubra experiências únicas e imersivas.",
+    description: "Team Staircase criando mundos digitais imersivos e experiências únicas. Explore nossos jogos e descubra aventuras extraordinárias.",
     images: [
       {
         url: "/og-image.jpg",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Team Staircase | Game Studio",
-    description: "Team Staircase criando mundos digitais no projeto Mandora. Explore nossos jogos e descubra experiências únicas e imersivas.",
+    description: "Team Staircase criando mundos digitais imersivos e experiências únicas. Explore nossos jogos e descubra aventuras extraordinárias.",
     images: ["/og-image.jpg"],
     creator: "@teamstaircase",
   },
@@ -78,14 +78,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${inter.variable} min-h-screen bg-slate-950 text-slate-300 font-sans antialiased flex flex-col`}
-      >
-        <Navbar />
+    <html lang="pt-BR">
+      <body className={`${inter.className} bg-slate-950 text-slate-300 antialiased min-h-screen flex flex-col`}>
+        {/* Navbar fixa no topo */}
+        <Navbar /> 
+        
+        {/* Main com padding-top para não ficar atrás da navbar */}
         <main className="flex-grow flex flex-col pt-20">
           {children}
         </main>
+
         <Footer />
       </body>
     </html>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Users, Code, Gamepad2, Sparkles, ExternalLink, History } from "lucide-react";
 import { TeamMember } from "@/types";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const features = [
   {
@@ -33,6 +34,16 @@ interface AboutContentProps {
 }
 
 export default function AboutContent({ teamMembers }: AboutContentProps) {
+  const router = useRouter();
+
+  const handleMemberClick = (slug: string | undefined) => {
+    if (slug && slug.trim() !== "") {
+      router.push(`/team/${slug}`);
+    } else {
+      console.warn("Membro sem slug:", slug);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-24 py-20">
       {/* SEÇÃO 1: Header */}
@@ -49,7 +60,7 @@ export default function AboutContent({ teamMembers }: AboutContentProps) {
         <p className="text-slate-400 text-base md:text-lg max-w-3xl mx-auto font-[var(--font-inter)]">
           O Team Staircase é um time apaixonado por desenvolvimento de jogos,
           dedicado a criar experiências únicas e memoráveis no universo digital.
-          Nossa missão é transformar ideias em realidade através do projeto Mandora.
+          Nossa missão é transformar ideias em realidade através de jogos extraordinários.
         </p>
       </motion.div>
 
@@ -100,8 +111,8 @@ export default function AboutContent({ teamMembers }: AboutContentProps) {
           <div className="prose prose-invert max-w-none flex flex-col items-center text-center">
             <p className="text-slate-400 text-lg mb-4 font-[var(--font-inter)] leading-relaxed max-w-3xl">
               O Team Staircase nasceu da paixão compartilhada por criar jogos que vão além do entretenimento.
-              Fundado com a missão de desenvolver experiências digitais imersivas, nosso estúdio se dedica ao
-              projeto Mandora, uma iniciativa que busca unir tecnologia, arte e narrativa em mundos virtuais únicos.
+              Fundado com a missão de desenvolver experiências digitais imersivas, nosso estúdio busca
+              unir tecnologia, arte e narrativa em mundos virtuais únicos e memoráveis.
             </p>
             <p className="text-slate-400 text-lg mb-4 font-[var(--font-inter)] leading-relaxed max-w-3xl">
               Acreditamos que cada jogo conta uma história e que cada história merece ser contada com excelência.
@@ -137,14 +148,26 @@ export default function AboutContent({ teamMembers }: AboutContentProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="flex flex-col items-center text-center gap-4 group"
+                onClick={() => {
+                  if (member.slug && member.slug.trim() !== "") {
+                    handleMemberClick(member.slug);
+                  } else {
+                    console.warn(`Membro "${member.name}" não tem slug configurado. Configure no Sanity Studio.`);
+                  }
+                }}
+                className={`flex flex-col items-center text-center gap-4 group transition-transform duration-300 ${
+                  member.slug && member.slug.trim() !== "" 
+                    ? "cursor-pointer hover:-translate-y-2" 
+                    : "cursor-not-allowed opacity-75"
+                }`}
               >
-                <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-purple-500/30 group-hover:border-cyan-500 transition-all duration-300">
+                <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-purple-500/30 group-hover:border-cyan-500 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] transition-all duration-300">
                   {member.photo ? (
                     <Image
                       src={member.photo}
                       alt={member.name}
                       fill
+                      sizes="(max-width: 768px) 128px, 128px"
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                   ) : (
@@ -155,22 +178,23 @@ export default function AboutContent({ teamMembers }: AboutContentProps) {
                     </div>
                   )}
                 </div>
-                <h4 className="text-xl font-bold text-white font-[var(--font-orbitron)]">
+                <h4 className="text-xl font-bold text-white font-[var(--font-orbitron)] group-hover:text-cyan-400 transition-colors">
                   {member.name}
                 </h4>
                 <p className="text-sm text-purple-400 uppercase tracking-widest font-[var(--font-inter)]">
                   {member.role}
                 </p>
-                {member.socialLink && (
-                  <a
-                    href={member.socialLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                {member.slug && member.slug.trim() !== "" && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMemberClick(member.slug);
+                    }}
                     className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 transition-colors text-xs font-[var(--font-inter)]"
                   >
                     <ExternalLink className="w-3 h-3" />
-                    Perfil
-                  </a>
+                    Ver Perfil
+                  </button>
                 )}
               </motion.div>
             ))}

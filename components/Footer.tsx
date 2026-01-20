@@ -28,7 +28,7 @@ export default function Footer() {
               Team Staircase
             </h3>
             <p className="text-slate-400 text-xs sm:text-sm font-[var(--font-inter)]">
-              Criando mundos digitais no projeto Mandora
+              Criando mundos digitais imersivos e experiências únicas
             </p>
           </motion.div>
 

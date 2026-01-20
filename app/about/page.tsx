@@ -7,7 +7,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: "Sobre Nós | Team Staircase",
-  description: "Conheça o Team Staircase, um estúdio de desenvolvimento de jogos dedicado a criar experiências únicas e memoráveis no universo digital através do projeto Mandora.",
+  description: "Conheça o Team Staircase, um estúdio de desenvolvimento de jogos dedicado a criar experiências únicas e memoráveis no universo digital.",
 };
 
 export default async function AboutPage() {
@@ -16,7 +16,10 @@ export default async function AboutPage() {
   return (
     <section className="py-20">
       <Container>
-        <AboutContent teamMembers={teamMembers} />
+        {/* Todo o conteúdo (Título, Cards, História, Equipe) VEM AQUI DENTRO */}
+        <div className="flex flex-col gap-20 text-center items-center">
+          <AboutContent teamMembers={teamMembers} />
+        </div>
       </Container>
     </section>
   );

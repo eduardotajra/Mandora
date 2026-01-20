@@ -46,8 +46,14 @@ interface SanityGame {
 interface SanityMember {
   _id: string;
   name: string;
+  slug?: {
+    current: string;
+  };
   role: string;
   avatar: any;
+  bio?: any[];
+  skills?: string[];
+  favoriteGame?: string;
   socials?: {
     linkedin?: string;
     github?: string;
@@ -122,8 +128,22 @@ export async function getGames(): Promise<Game[]> {
 export const TEAM_QUERY = `*[_type == "member"] | order(name asc) {
   _id,
   name,
+  slug,
   role,
   avatar,
+  socials
+}`;
+
+// Query GROQ para buscar um membro específico por slug
+export const MEMBER_BY_SLUG_QUERY = `*[_type == "member" && slug.current == $slug][0] {
+  _id,
+  name,
+  slug,
+  role,
+  avatar,
+  bio,
+  skills,
+  favoriteGame,
   socials
 }`;
 
@@ -144,11 +164,13 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
       return {
         id: parseInt(member._id.replace(/[^0-9]/g, "")) || index + 1,
         name: member.name,
+        slug: member.slug?.current || "",
         role: member.role,
         photo: member.avatar
           ? urlFor(member.avatar).width(400).height(400).url()
           : "/api/placeholder/400/400",
         socialLink: socialLink,
+        socials: member.socials,
       };
     });
   } catch (error) {
@@ -182,5 +204,39 @@ export async function getGameBySlug(slug: string): Promise<GameDetails | null> {
   } catch (error) {
     console.error("Erro ao buscar jogo do Sanity:", error);
     return null;
+  }
+}
+
+// Função para buscar um membro específico por slug
+export async function getMemberBySlug(slug: string): Promise<SanityMember | null> {
+  try {
+    const member: SanityMember | null = await client.fetch(
+      MEMBER_BY_SLUG_QUERY,
+      { slug }
+    );
+
+    if (!member) {
+      return null;
+    }
+
+    return member;
+  } catch (error) {
+    console.error("Erro ao buscar membro do Sanity:", error);
+    return null;
+  }
+}
+
+// Função para buscar todos os slugs dos membros (para generateStaticParams)
+export async function getAllMemberSlugs(): Promise<string[]> {
+  try {
+    const members = await client.fetch(
+      `*[_type == "member" && defined(slug.current)] {
+        "slug": slug.current
+      }`
+    );
+    return members.map((member: { slug: string }) => member.slug);
+  } catch (error) {
+    console.error("Erro ao buscar slugs dos membros:", error);
+    return [];
   }
 }

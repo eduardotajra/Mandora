@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Send, Mail, MessageSquare, User, FileText } from "lucide-react";
+import { Send } from "lucide-react";
 import Container from "@/components/ui/Container";
 
 export default function ContactPage() {
@@ -16,7 +16,9 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -28,21 +30,44 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
-    // Simular envio (por enquanto apenas visual)
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erro ao enviar mensagem");
+      }
+
+      // Sucesso
       setSubmitStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
       
       setTimeout(() => {
         setSubmitStatus("idle");
-      }, 3000);
-    }, 1000);
+      }, 5000);
+    } catch (error) {
+      console.error("Erro ao enviar formulário:", error);
+      setSubmitStatus("error");
+      
+      setTimeout(() => {
+        setSubmitStatus("idle");
+      }, 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <section className="py-20">
-      <Container className="max-w-4xl">
+      <Container>
+        <div className="flex flex-col items-center">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -59,22 +84,19 @@ export default function ContactPage() {
             </p>
           </motion.div>
 
-          {/* Formulário */}
+          {/* Card do Formulário */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl p-8 md:p-10"
+            className="w-full max-w-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-8"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Nome */}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2 font-[var(--font-inter)]">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-cyan-400" />
-                    Nome
-                  </div>
+                  Nome
                 </label>
                 <input
                   type="text"
@@ -83,7 +105,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-300 font-[var(--font-inter)]"
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-lg p-3 focus:border-purple-500 transition-colors outline-none text-slate-300 placeholder-slate-500 font-[var(--font-inter)]"
                   placeholder="Seu nome completo"
                 />
               </div>
@@ -91,10 +113,7 @@ export default function ContactPage() {
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2 font-[var(--font-inter)]">
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-cyan-400" />
-                    Email
-                  </div>
+                  Email
                 </label>
                 <input
                   type="email"
@@ -103,7 +122,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-300 font-[var(--font-inter)]"
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-lg p-3 focus:border-purple-500 transition-colors outline-none text-slate-300 placeholder-slate-500 font-[var(--font-inter)]"
                   placeholder="seu@email.com"
                 />
               </div>
@@ -111,30 +130,35 @@ export default function ContactPage() {
               {/* Assunto */}
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-slate-300 mb-2 font-[var(--font-inter)]">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-cyan-400" />
-                    Assunto
-                  </div>
+                  Assunto
                 </label>
-                <input
-                  type="text"
+                <select
                   id="subject"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-300 font-[var(--font-inter)]"
-                  placeholder="Qual é o assunto da sua mensagem?"
-                />
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-lg p-3 focus:border-purple-500 transition-colors outline-none text-slate-300 font-[var(--font-inter)]"
+                >
+                  <option value="" disabled className="bg-slate-950">
+                    Selecione um assunto
+                  </option>
+                  <option value="Orçamento" className="bg-slate-950">
+                    Orçamento
+                  </option>
+                  <option value="Suporte" className="bg-slate-950">
+                    Suporte
+                  </option>
+                  <option value="Feedback" className="bg-slate-950">
+                    Feedback
+                  </option>
+                </select>
               </div>
 
               {/* Mensagem */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-2 font-[var(--font-inter)]">
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-cyan-400" />
-                    Mensagem
-                  </div>
+                  Mensagem
                 </label>
                 <textarea
                   id="message"
@@ -143,7 +167,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-300 resize-none font-[var(--font-inter)]"
+                  className="w-full bg-slate-950/50 border border-white/10 rounded-lg p-3 focus:border-purple-500 transition-colors outline-none text-slate-300 placeholder-slate-500 resize-none font-[var(--font-inter)]"
                   placeholder="Conte-nos mais sobre sua ideia, pergunta ou proposta..."
                 />
               </div>
@@ -173,7 +197,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-violet-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 font-[var(--font-inter)]"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-violet-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 font-[var(--font-inter)]"
               >
                 {isSubmitting ? (
                   <>
@@ -189,6 +213,7 @@ export default function ContactPage() {
               </button>
             </form>
           </motion.div>
+        </div>
       </Container>
     </section>
   );

@@ -16,7 +16,16 @@ export interface Game {
 export interface TeamMember {
   id: number;
   name: string;
+  slug: string;
   role: string;
   photo: string;
   socialLink: string;
+  bio?: any[];
+  skills?: string[];
+  favoriteGame?: string;
+  socials?: {
+    linkedin?: string;
+    github?: string;
+    artstation?: string;
+  };
 }

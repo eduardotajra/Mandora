@@ -8,7 +8,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: "Team Staircase | Game Studio",
-  description: "Team Staircase é um estúdio de desenvolvimento de jogos criando mundos digitais imersivos e experiências únicas no projeto Mandora. Explore nossos jogos e junte-se à aventura!",
+  description: "Team Staircase é um estúdio de desenvolvimento de jogos criando mundos digitais imersivos e experiências únicas. Explore nossos jogos e junte-se à aventura!",
 };
 
 export default async function Home() {

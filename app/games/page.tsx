@@ -7,7 +7,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: "Jogos | Team Staircase",
-  description: "Explore todos os jogos desenvolvidos pelo Team Staircase. Descubra mundos digitais imersivos e experiências únicas no projeto Mandora.",
+  description: "Explore todos os jogos desenvolvidos pelo Team Staircase. Descubra mundos digitais imersivos e experiências únicas.",
 };
 
 export default async function GamesPage() {

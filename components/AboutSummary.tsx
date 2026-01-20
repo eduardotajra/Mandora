@@ -22,7 +22,7 @@ export default function AboutSummary() {
           <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-8 font-[var(--font-inter)]">
             O Team Staircase é um time apaixonado por desenvolvimento de jogos,
             dedicado a criar experiências únicas e memoráveis no universo digital.
-            Nossa missão é transformar ideias em realidade através do projeto Mandora.
+            Nossa missão é transformar ideias em realidade através de jogos extraordinários.
           </p>
           <Link
             href="/about"

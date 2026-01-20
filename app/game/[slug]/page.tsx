@@ -85,6 +85,7 @@ const portableTextComponents: PortableTextComponents = {
                 src={imageUrl}
                 alt={value.alt || "Imagem"}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                 className="object-cover"
               />
             </div>
@@ -128,7 +129,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? urlFor(game.coverImage).width(1200).height(630).url()
     : "/og-image.jpg";
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mandora.teamstaircase.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://teamstaircase.com";
 
   return {
     title: game.title,
@@ -208,6 +209,7 @@ export default async function GamePage({ params }: PageProps) {
             src={coverImageUrl}
             alt={game.title}
             fill
+            sizes="100vw"
             className="object-cover"
             priority
           />

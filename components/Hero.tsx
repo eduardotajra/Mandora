@@ -30,8 +30,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto font-[var(--font-inter)]"
           >
-            Criando mundos digitais no projeto{" "}
-            <span className="text-cyan-400 font-semibold">Mandora</span>
+            Criando mundos digitais imersivos e experiências únicas
           </motion.p>
 
           <motion.div

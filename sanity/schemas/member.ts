@@ -14,6 +14,22 @@ export default defineType({
       validation: (Rule) => Rule.required().max(100),
     }),
     defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      description: 'URL amigável gerada automaticamente a partir do nome',
+      options: {
+        source: 'name',
+        maxLength: 96,
+        slugify: (input: string) =>
+          input
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .slice(0, 96),
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'role',
       title: 'Role',
       type: 'string',
@@ -64,12 +80,84 @@ export default defineType({
         },
       ],
     }),
+    defineField({
+      name: 'bio',
+      title: 'Bio',
+      type: 'array',
+      description: 'Biografia do membro (suporta formatação rica)',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'H1', value: 'h1' },
+            { title: 'H2', value: 'h2' },
+            { title: 'H3', value: 'h3' },
+            { title: 'Quote', value: 'blockquote' },
+          ],
+          lists: [
+            { title: 'Bullet', value: 'bullet' },
+            { title: 'Number', value: 'number' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Strong', value: 'strong' },
+              { title: 'Emphasis', value: 'em' },
+              { title: 'Code', value: 'code' },
+            ],
+            annotations: [
+              {
+                title: 'URL',
+                name: 'link',
+                type: 'object',
+                fields: [
+                  {
+                    title: 'URL',
+                    name: 'href',
+                    type: 'url',
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          type: 'image',
+          options: { hotspot: true },
+        },
+      ],
+    }),
+    defineField({
+      name: 'skills',
+      title: 'Skills',
+      type: 'array',
+      description: 'Lista de habilidades do membro (ex: Pixel Art, Unity, C#)',
+      of: [
+        {
+          type: 'string',
+        },
+      ],
+    }),
+    defineField({
+      name: 'favoriteGame',
+      title: 'Favorite Game',
+      type: 'string',
+      description: 'Jogo favorito do membro (fun fact)',
+    }),
   ],
   preview: {
     select: {
       title: 'name',
       subtitle: 'role',
       media: 'avatar',
+      slug: 'slug',
+    },
+    prepare({ title, subtitle, media, slug }) {
+      return {
+        title,
+        subtitle: `${subtitle || 'No role'}${slug?.current ? ` • /team/${slug.current}` : ''}`,
+        media,
+      }
     },
   },
   orderings: [
