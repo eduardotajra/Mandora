@@ -149,7 +149,7 @@ export default async function MemberPage({ params }: PageProps) {
     <div className="min-h-screen bg-slate-950 relative">
       {/* Botão Voltar */}
       <Link
-        href="/about"
+        href="/"
         className="fixed top-24 left-4 sm:left-6 z-50 inline-flex items-center gap-2 px-4 py-2 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-lg text-slate-400 hover:text-cyan-400 hover:border-cyan-500/50 transition-all duration-300 font-[var(--font-inter)]"
       >
         <ArrowLeft className="w-4 h-4" />

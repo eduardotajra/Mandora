@@ -1,17 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Twitter, Linkedin, Mail, Youtube, Instagram, Gamepad2, Cloud } from "lucide-react";
+import { X, Linkedin, Mail, Youtube, Instagram, Gamepad2, Cloud } from "lucide-react";
 import Container from "./ui/Container";
 
 const socialLinks = [
-  { icon: Twitter, href: "#", label: "Twitter/X" },
+  { icon: X, href: "https://x.com/TeamStaircase", label: "X" },
   { icon: Linkedin, href: "#", label: "LinkedIn" },
   { icon: Instagram, href: "#", label: "Instagram" },
   { icon: Youtube, href: "#", label: "YouTube" },
-  { icon: Mail, href: "#contact", label: "Email" },
-  { icon: Gamepad2, href: "#", label: "Itch.io" },
-  { icon: Cloud, href: "#", label: "Bluesky" },
+  { icon: Mail, href: "mailto:teamstaircasegames@gmail.com", label: "Email" },
+  { icon: Gamepad2, href: "https://team-staircase.itch.io/", label: "Itch.io" },
+  { icon: Cloud, href: "https://bsky.app/profile/team-staircase.bsky.social", label: "Bluesky" },
 ];
 
 export default function Footer() {
@@ -47,6 +47,8 @@ export default function Footer() {
                 <motion.a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   initial={{ opacity: 0, scale: 0 }}
                   whileInView={{ opacity: 1, scale: 1 }}

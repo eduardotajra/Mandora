@@ -1,10 +1,11 @@
 import Hero from "@/components/Hero";
 import FeaturedGames from "@/components/FeaturedGames";
 import AboutSummary from "@/components/AboutSummary";
-import { getGames } from "@/lib/sanity";
+import { getGames, getTeamMembers } from "@/lib/sanity";
 
-// Revalidar a página a cada 60 segundos
-export const revalidate = 60;
+// Revalidar a página a cada 10 segundos (para atualizações mais rápidas após mudanças no CMS)
+export const revalidate = 10;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: "Team Staircase | Game Studio",
@@ -13,6 +14,7 @@ export const metadata = {
 
 export default async function Home() {
   const allGames = await getGames();
+  const teamMembers = await getTeamMembers();
 
   // Pegar apenas os 3 jogos mais recentes
   const featuredGames = allGames.slice(0, 3);
@@ -23,7 +25,7 @@ export default async function Home() {
       <div className="pt-16">
         <FeaturedGames games={featuredGames} />
       </div>
-      <AboutSummary />
+      <AboutSummary teamMembers={teamMembers} />
     </div>
   );
 }

@@ -2,8 +2,9 @@ import { getGames } from "@/lib/sanity";
 import Container from "@/components/ui/Container";
 import GameCard from "@/components/GameCard";
 
-// Revalidar a página a cada 60 segundos
-export const revalidate = 60;
+// Revalidar a página a cada 10 segundos (para atualizações mais rápidas após mudanças no CMS)
+export const revalidate = 10;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: "Jogos | Team Staircase",
@@ -38,9 +39,11 @@ export default async function GamesPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-wrap justify-center items-start gap-12 md:gap-16">
             {games.map((game) => (
-              <GameCard key={game.id} game={game} />
+              <div key={game.id} className="w-full max-w-[400px]">
+                <GameCard game={game} />
+              </div>
             ))}
           </div>
         )}
